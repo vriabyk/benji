@@ -17,7 +17,14 @@ benji:
 
   affinity: {}
 
+  # You should choose either set configurationFromSecrets.enabled to true or configuration.enabled
+  configurationFromSecrets:
+    enabled: false
+    secretsName: "benji-config"
+    createSecret: true
+
   configuration:
+    enabled: true
     configurationVersion: '1'
     databaseEngine: sqlite:////tmp/benji.sqlite
     # databaseEngine: postgresql://benji:secret@benji-postgresql:5432/benji
@@ -95,6 +102,14 @@ benji:
     #   mountPath: /etc/ceph/ceph.client.admin.keyring
     #   subPath: keyring
     #   readOnly: true
+
+# Ceph related parameters.
+ceph:
+  enabled: false
+  createSecret: true
+  configMapName: "benji-ceph-conf"
+  mon_hosts: "10.128.11.10:6789,10.128.11.12:6789,10.128.11.15:6789,10.128.11.16:6789,10.128.11.11:6789"
+  key: "ceph-keyring"
 
 fsfreeze:
   enabled: true

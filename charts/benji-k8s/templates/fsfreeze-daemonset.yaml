@@ -5,11 +5,9 @@ kind: DaemonSet
 metadata:
   name: {{ tuple . "fsfreeze" | include "benji.fullname" }}
   labels:
-      app.kubernetes.io/name: {{ include "benji.name" . }}
-      helm.sh/chart: {{ include "benji.chart" . }}
-      app.kubernetes.io/instance: {{ .Release.Name }}
-      app.kubernetes.io/component: fsfreeze
-      app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "benji.chart" . }}
+    app.kubernetes.io/component: fsfreeze
+{{ include "benji.labels" $ | indent 4 }}
 spec:
   selector:
     matchLabels:

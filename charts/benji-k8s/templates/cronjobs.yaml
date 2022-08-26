@@ -5,14 +5,12 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ tuple $ .name | include "benji.fullname" }}
+  {{- if .Values.benji.configuration.enabled }}
   annotations:
     checksum/config: {{ $.Values.benji.configuration | toYaml | sha256sum }}
+  {{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "benji.name" $ }}
-    helm.sh/chart: {{ include "benji.chart" $ }}
-    app.kubernetes.io/instance: {{ $.Release.Name }}
-    app.kubernetes.io/component: cronjob-{{ .name }}
-    app.kubernetes.io/managed-by: {{ $.Release.Service }}
+{{ include "benji.labels" $ | indent 4 }}
 spec:
   schedule: {{ .schedule | quote }}
   successfulJobsHistoryLimit: 3
@@ -74,8 +72,13 @@ spec:
           hostNetwork: false
           volumes:
             - name: benji-config
+            {{- if .Values.benji.configurationFromSecrets.enabled }}
+              secret:
+                secretName: {{ .Values.benji.configurationFromSecrets.secretsName }}
+            {{- else if .Values.benji.configuration.enabled }}
               configMap:
                 name: {{ tuple $ "" | include "benji.fullname" }}
+            {{- end }}
             - name: tz-config
               hostPath:
                 path: /usr/share/zoneinfo/{{ $.Values.timeZone }}

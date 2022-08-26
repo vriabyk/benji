@@ -3,14 +3,12 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ tuple . "maint" | include "benji.fullname" }}
+  {{- if .Values.benji.configuration.enabled }}
   annotations:
     checksum/config: {{ .Values.benji.configuration | toYaml | sha256sum }}
+  {{- end }}
   labels:
-    app.kubernetes.io/name: {{ include "benji.name" . }}
-    helm.sh/chart: {{ include "benji.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: benji
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "benji.labels" . | indent 4 }}
 spec:
   replicas: 1
   selector:
@@ -52,20 +50,25 @@ spec:
             - name: tz-config
               mountPath: /etc/localtime
 {{- if .Values.benji.volumeMounts }}
-            {{ toYaml .Values.benji.volumeMounts | nindent 12 }}
+            {{- toYaml .Values.benji.volumeMounts | nindent 12 }}
 {{- end }}
           resources:
             {{ toYaml .Values.benji.resources | nindent 12 }}
       hostNetwork: false
       volumes:
         - name: benji-config
+        {{- if .Values.benji.configurationFromSecrets.enabled }}
+          secret:
+            secretName: {{ .Values.benji.configurationFromSecrets.secretsName }}
+        {{- else if .Values.benji.configuration.enabled }}
           configMap:
             name: {{ tuple . "" | include "benji.fullname" }}
+        {{- end }}
         - name: tz-config
           hostPath:
             path: /usr/share/zoneinfo/{{ .Values.timeZone }}
 {{- if .Values.benji.volumes }}            
-        {{ toYaml .Values.benji.volumes | nindent 8 }}
+        {{- toYaml .Values.benji.volumes | nindent 8 }}
 {{- end }}
 {{- with .Values.benji.nodeSelector }}
       nodeSelector:
