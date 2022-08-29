@@ -24,7 +24,7 @@ benji:
     createSecret: false
     configuration:
       configurationVersion: '1'
-      databaseEngine: sqlite:////tmp/benji.sqlite
+      databaseEngine: sqlite:////benji-database/benji.sqlite
       defaultStorage: storage-1
       storages:
         - name: storage-1
@@ -48,7 +48,7 @@ benji:
     enabled: true
     configuration:
       configurationVersion: '1'
-      databaseEngine: sqlite:////tmp/benji.sqlite
+      databaseEngine: sqlite:////benji-database/benji.sqlite
       # databaseEngine: postgresql://benji:secret@benji-postgresql:5432/benji
       defaultStorage: storage-1
       storages:
@@ -80,6 +80,22 @@ benji:
               - RBD_FEATURE_EXCLUSIVE_LOCK
               - RBD_FEATURE_OBJECT_MAP
               - RBD_FEATURE_FAST_DIFF
+
+  # initialize database during deployment
+  initContainers:
+    - name: database-init
+      image: "ghcr.io/elemental-lf/benji-k8s:master"
+      imagePullPolicy: Always
+      command:
+      - /bin/bash
+      - -xc
+      - |-
+        benji database-init || true
+      volumeMounts:
+        - name: benji-workdir
+          mountPath: /benji-database
+        - name: benji-config
+          mountPath: /benji/etc
 
   cronJob:
     activeDeadlineSeconds: null

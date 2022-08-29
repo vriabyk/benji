@@ -25,6 +25,10 @@ spec:
     spec:
       serviceAccountName: {{ tuple . "" | include "benji.fullname" }}
       dnsPolicy: ClusterFirstWithHostNet
+{{- if .Values.benji.initContainers }}
+      initContainers:
+{{ toYaml .Values.benji.initContainers | indent 8 }}
+{{- end }}
       containers:
         - name: benji
           image: "{{ .Values.benji.image.registry }}/{{ .Values.benji.image.repository }}:{{ .Values.benji.image.tag }}"
@@ -45,6 +49,8 @@ spec:
             - name: TZ
               value: "{{ .Values.timeZone }}"
           volumeMounts:
+            - name: benji-workdir
+              mountPath: /benji-database
             - name: benji-config
               mountPath: /benji/etc
             - name: tz-config
@@ -56,6 +62,8 @@ spec:
             {{ toYaml .Values.benji.resources | nindent 12 }}
       hostNetwork: false
       volumes:
+        - name: benji-workdir
+          emptyDir: {}
         - name: benji-config
         {{- if .Values.benji.configurationFromSecrets.enabled }}
           secret:
