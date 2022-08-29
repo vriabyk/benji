@@ -5,9 +5,9 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: {{ tuple $ .name | include "benji.fullname" }}
-  {{- if .Values.benji.configuration.enabled }}
+  {{- if .Values.benji.configurationFromConfigMap.enabled }}
   annotations:
-    checksum/config: {{ $.Values.benji.configuration | toYaml | sha256sum }}
+    checksum/config: {{ $.Values.benji.configurationFromConfigMap.configuration | toYaml | sha256sum }}
   {{- end }}
   labels:
 {{ include "benji.labels" $ | indent 4 }}
@@ -75,7 +75,7 @@ spec:
             {{- if .Values.benji.configurationFromSecrets.enabled }}
               secret:
                 secretName: {{ .Values.benji.configurationFromSecrets.secretsName }}
-            {{- else if .Values.benji.configuration.enabled }}
+            {{- else if .Values.benji.configurationFromConfigMap.enabled }}
               configMap:
                 name: {{ tuple $ "" | include "benji.fullname" }}
             {{- end }}

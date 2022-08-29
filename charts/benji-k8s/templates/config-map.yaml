@@ -1,4 +1,4 @@
-{{- if .Values.benji.configuration.enabled }}
+{{- if .Values.benji.configurationFromConfigMap.enabled }}
 ---
 apiVersion: v1
 kind: ConfigMap
