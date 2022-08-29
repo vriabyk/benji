@@ -3,9 +3,9 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ tuple . "maint" | include "benji.fullname" }}
-  {{- if .Values.benji.configurationFromConfigMap.enabled }}
+  {{- if not .Values.benji.configurationFromSecrets }}
   annotations:
-    checksum/config: {{ .Values.benji.configurationFromConfigMap.configuration | toYaml | sha256sum }}
+    checksum/config: {{ .Values.benji.configuration | toYaml | sha256sum }}
   {{- end }}
   labels:
 {{ include "benji.labels" . | indent 4 }}
@@ -65,10 +65,10 @@ spec:
         - name: benji-workdir
           emptyDir: {}
         - name: benji-config
-        {{- if .Values.benji.configurationFromSecrets.enabled }}
+        {{- if .Values.benji.configurationFromSecrets }}
           secret:
-            secretName: {{ .Values.benji.configurationFromSecrets.secretsName }}
-        {{- else if .Values.benji.configurationFromConfigMap.enabled }}
+            secretName: {{ tuple . "" | include "benji.fullname" }}
+        {{- else }}
           configMap:
             name: {{ tuple . "" | include "benji.fullname" }}
         {{- end }}

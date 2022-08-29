@@ -1,4 +1,4 @@
-{{- if .Values.benji.configurationFromConfigMap.enabled }}
+{{- if not .Values.benji.configurationFromSecrets }}
 ---
 apiVersion: v1
 kind: ConfigMap
@@ -8,7 +8,7 @@ metadata:
 {{ include "benji.labels" . | indent 4 }}
 data:
   benji.yaml: |
-    {{ .Values.benji.configurationFromConfigMap.configuration | toYaml | nindent 4 }}
+    {{ .Values.benji.configuration | toYaml | nindent 4 }}
 {{- end }}
 {{- if .Values.ceph.enabled }}
 ---
