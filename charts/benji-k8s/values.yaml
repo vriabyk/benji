@@ -19,33 +19,6 @@ benji:
 
   configurationFromSecrets: false
 
-  # You should define either configurationFromSecrets.enabled to true or configuration.enabled
-  #  configurationFromSecrets:
-  #    enabled: false
-  #    secretsName: "benji-config"
-  #    createSecret: false
-  #    configuration:
-  #      configurationVersion: '1'
-  #      databaseEngine: sqlite:////benji-database/benji.sqlite
-  #      defaultStorage: storage-1
-  #      storages:
-  #        - name: storage-1
-  #          storageId: 1
-  #          module: s3
-  #          configuration:
-  #            awsAccessKeyId: admin
-  #            awsSecretAccessKey: admin
-  #            useSsl: true
-  #            endpointUrl: https://s3-compatible-endpoint/
-  #            bucketName: benji
-  #            disableEncodingType: true
-  #      ios:
-  #        - name: csi
-  #          module: rbdaio
-  #          configuration:
-  #            simultaneousReads: 5
-  #            simultaneousWrites: 5
-
   configuration:
     configurationVersion: '1'
     databaseEngine: sqlite:////benji-database/benji.sqlite
