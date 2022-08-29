@@ -67,10 +67,10 @@ spec:
         - name: benji-config
         {{- if .Values.benji.configurationFromSecrets }}
           secret:
-            secretName: {{ tuple . "" | include "benji.fullname" }}
+            secretName: {{ tuple $ "" | include "benji.fullname" }}
         {{- else }}
           configMap:
-            name: {{ tuple . "" | include "benji.fullname" }}
+            name: {{ tuple $ "" | include "benji.fullname" }}
         {{- end }}
         - name: tz-config
           hostPath:
