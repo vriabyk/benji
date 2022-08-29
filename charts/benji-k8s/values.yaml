@@ -17,7 +17,7 @@ benji:
 
   affinity: {}
 
-  configurationFromSecrets: true
+  configurationFromSecrets: false
 
   # You should define either configurationFromSecrets.enabled to true or configuration.enabled
   #  configurationFromSecrets:
