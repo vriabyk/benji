@@ -8,7 +8,7 @@ metadata:
 {{ include "benji.labels" . | indent 4 }}
 data:
   benji.yaml: |
-    {{ .Values.benji.configuration | toYaml | nindent 4 }}
+    {{ .Values.benji.configurationFromConfigMap.configuration | toYaml | nindent 4 }}
 {{- end }}
 {{- if .Values.ceph.enabled }}
 ---
