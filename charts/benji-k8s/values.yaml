@@ -21,7 +21,7 @@ benji:
   configurationFromSecrets:
     enabled: false
     secretsName: "benji-config"
-    createSecret: true
+    createSecret: false
 
   configuration:
     enabled: true
