@@ -18,6 +18,7 @@ benji:
   affinity: {}
 
   configurationFromSecrets: false
+  configurationSecretsName: ""
 
   configuration:
     configurationVersion: '1'
