@@ -184,5 +184,5 @@ postgresql:
   #     size: 100Gi
 
 pushgateway:
-  enabled: false
+  enabled: true
   nameOverride: pushgateway
