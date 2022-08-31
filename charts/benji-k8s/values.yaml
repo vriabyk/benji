@@ -66,10 +66,11 @@ benji:
       - |-
         benji database-init || true
       volumeMounts:
-        - name: benji-workdir
-          mountPath: /benji-database
         - name: benji-config
           mountPath: /benji/etc
+        # Should be uncommented when using sqlite, don't forget to uncomment appropriate sections in volumes and volumeMounts
+        #- name: benji-database
+        #  mountPath: /benji-database
 
   cronJob:
     activeDeadlineSeconds: null
@@ -96,6 +97,8 @@ benji:
   # Volumes and volume mounts can be used to mount Ceph configuration and credentials, backup sources or storages into
   # the Benji container.
   volumes: []
+    # - name: benji-database
+    #   emptyDir: {}
     # - name: ceph-etc
     #   configMap:
     #     name: ceph-etc
@@ -106,6 +109,8 @@ benji:
     #     defaultMode: 0444
 
   volumeMounts: []
+    # - name: benji-database
+    #   mountPath: /benji-database
     # - name: ceph-etc
     #   mountPath: /etc/ceph/ceph.conf
     #   subPath: ceph.conf

@@ -49,8 +49,6 @@ spec:
             - name: TZ
               value: "{{ .Values.timeZone }}"
           volumeMounts:
-            - name: benji-workdir
-              mountPath: /benji-database
             - name: benji-config
               mountPath: /benji/etc
             - name: tz-config
@@ -62,8 +60,6 @@ spec:
             {{ toYaml .Values.benji.resources | nindent 12 }}
       hostNetwork: false
       volumes:
-        - name: benji-workdir
-          emptyDir: {}
         - name: benji-config
         {{- if .Values.benji.configurationFromSecrets }}
           secret:
