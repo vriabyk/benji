@@ -6,11 +6,7 @@ metadata:
   annotations:
     checksum/config: {{ .Values.benji.configuration | toYaml | sha256sum }}
   labels:
-    app.kubernetes.io/name: {{ include "benji.name" . }}
-    helm.sh/chart: {{ include "benji.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/component: benji
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+{{ include "benji.labels" . | indent 4 }}
 spec:
   replicas: 1
   selector:
@@ -27,6 +23,10 @@ spec:
     spec:
       serviceAccountName: {{ tuple . "" | include "benji.fullname" }}
       dnsPolicy: ClusterFirstWithHostNet
+{{- if .Values.benji.initContainers }}
+      initContainers:
+{{ toYaml .Values.benji.initContainers | indent 8 }}
+{{- end }}
       containers:
         - name: benji
           image: "{{ .Values.benji.image.registry }}/{{ .Values.benji.image.repository }}:{{ .Values.benji.image.tag }}"
@@ -47,8 +47,10 @@ spec:
             - name: TZ
               value: "{{ .Values.timeZone }}"
           volumeMounts:
+{{ if not $.Values.benji.externalConfiguration }}
             - name: benji-config
               mountPath: /benji/etc
+{{ end }}
             - name: tz-config
               mountPath: /etc/localtime
 {{- if .Values.benji.volumeMounts }}
@@ -58,9 +60,11 @@ spec:
             {{ toYaml .Values.benji.resources | nindent 12 }}
       hostNetwork: false
       volumes:
+{{ if not $.Values.benji.externalConfiguration }}
         - name: benji-config
           configMap:
             name: {{ tuple . "" | include "benji.fullname" }}
+{{ end }}
         - name: tz-config
           hostPath:
             path: /usr/share/zoneinfo/{{ .Values.timeZone }}

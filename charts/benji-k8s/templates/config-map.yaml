@@ -1,13 +1,25 @@
+{{ if not .Values.benji.externalConfiguration }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ tuple . "" | include "benji.fullname" }}
   labels:
-    app.kubernetes.io/name: {{ include "benji.name" . }}
-    helm.sh/chart: {{ include "benji.chart" . }}
-    app.kubernetes.io/instance: {{ .Release.Name }}
-    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{ include "benji.labels" $ | indent 4 }}
 data:
   benji.yaml: |
     {{ .Values.benji.configuration | toYaml | nindent 4 }}
+{{ end }}
+
+{{- if .Values.ceph.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.ceph.configMapName }}
+  labels:
+{{ include "benji.labels" . | indent 4 }}
+data:
+  ceph.conf: |
+{{ include "benji.ceph-conf" . | indent 4 }}
+{{- end }}

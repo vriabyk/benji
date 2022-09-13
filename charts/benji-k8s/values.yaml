@@ -17,6 +17,12 @@ benji:
 
   affinity: {}
 
+  initContainers: []
+
+  ##if true, use pre-existing object in cluster with configuration
+  ##the below configuration values will be ignored in this case
+  externalConfiguration: false
+
   configuration:
     configurationVersion: '1'
     databaseEngine: sqlite:////tmp/benji.sqlite
@@ -77,6 +83,9 @@ benji:
   # Volumes and volume mounts can be used to mount Ceph configuration and credentials, backup sources or storages into
   # the Benji container.
   volumes: []
+    #    - name: benji-config
+    #      secret:
+    #        secretName: benji
     # - name: ceph-etc
     #   configMap:
     #     name: ceph-etc
@@ -85,8 +94,9 @@ benji:
     #   secret:
     #     secretName: ceph-client-admin-keyring
     #     defaultMode: 0444
-
-  volumeMounts: []
+    # volumeMounts:
+    #   - name: benji-config
+    #     mountPath: /benji/etc
     # - name: ceph-etc
     #   mountPath: /etc/ceph/ceph.conf
     #   subPath: ceph.conf
@@ -152,4 +162,7 @@ postgresql:
   #     size: 100Gi
 
 pushgateway:
+  enabled: false
   nameOverride: pushgateway
+
+ceph: {}
