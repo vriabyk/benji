@@ -22,7 +22,11 @@ kind: ConfigMap
 metadata:
   name: {{ .Values.ceph.configMapName }}
   labels:
-{{ include "benji.labels" . | indent 4 }}
+    app.kubernetes.io/name: {{ include "benji.name" . }}
+    helm.sh/chart: {{ include "benji.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/component: benji
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   ceph.conf: |
 {{ include "benji.ceph-conf" . | indent 4 }}

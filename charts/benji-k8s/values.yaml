@@ -18,10 +18,8 @@ benji:
   affinity: {}
 
   initContainers: []
-
-  ##if true, use pre-existing object in cluster with configuration
-  ##the below configuration values will be ignored in this case
-  externalSecretConfig: secretName
+## insert a secret name here that contains your configuration, otherwise the below configuration is used
+  externalSecretConfig: false
 
   configuration:
     configurationVersion: '1'
@@ -62,18 +60,18 @@ benji:
     activeDeadlineSeconds: null
     startingDeadlineSeconds: null
 
-  crontab: []
-    # - name: backup-all
-    #   schedule: "*/10 * * * *"
-    #   command:
-    #     - benji-backup-pvc
-    # - name: enforce
-    #   schedule: "00 04 * * *"
-    #   command:
-    #     - benji-command
-    #     - enforce
-    #     - latest3,hours24,days30,months3
-    #     - 'labels["benji-backup.me/instance"] == "benji-k8s"'
+  crontab:
+    - name: backup-all
+      schedule: "*/10 * * * *"
+      command:
+        - benji-backup-pvc
+    - name: enforce
+      schedule: "00 04 * * *"
+      command:
+        - benji-command
+        - enforce
+        - latest3,hours24,days30,months3
+        - 'labels["benji-backup.me/instance"] == "benji-k8s"'
     # - name: cleanup
     #   schedule: "00 05 * * *"
     #   command:
@@ -91,6 +89,7 @@ benji:
     #   secret:
     #     secretName: ceph-client-admin-keyring
     #     defaultMode: 0444
+
   volumeMounts: []
     # - name: ceph-etc
     #   mountPath: /etc/ceph/ceph.conf
@@ -157,12 +156,7 @@ postgresql:
   #     size: 100Gi
 
 pushgateway:
-  enabled: false
+  enabled: true
   nameOverride: pushgateway
 
-ceph:
-  enabled: true
-  createKeyringSecret: true
-  configMapName: "benji-ceph-conf"
-  mon_hosts: "10.128.11.10:6789,10.128.11.12:6789,10.128.11.15:6789,10.128.11.16:6789,10.128.11.11:6789"
-  key: "ceph-keyring"
+ceph: {}

@@ -38,19 +38,6 @@ Create chart name and version as used by the chart label.
 {{- end -}}
 
 {{/*
-Common labels
-*/}}
-{{- define "benji.labels" -}}
-app.kubernetes.io/name: {{ include "benji.name" . }}
-helm.sh/chart: {{ include "benji.chart" . }}
-app.kubernetes.io/instance: {{ .Release.Name }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
-{{- end }}
-app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- end -}}
-
-{{/*
 ceph conf
 */}}
 {{- define "benji.ceph-conf" -}}

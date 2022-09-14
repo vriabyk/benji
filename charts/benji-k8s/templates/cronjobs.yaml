@@ -8,7 +8,11 @@ metadata:
   annotations:
     checksum/config: {{ $.Values.benji.configuration | toYaml | sha256sum }}
   labels:
-{{ include "benji.labels" $ | indent 4 }}
+    app.kubernetes.io/name: {{ include "benji.name" $ }}
+    helm.sh/chart: {{ include "benji.chart" $ }}
+    app.kubernetes.io/instance: {{ $.Release.Name }}
+    app.kubernetes.io/component: cronjob-{{ .name }}
+    app.kubernetes.io/managed-by: {{ $.Release.Service }}
 spec:
   schedule: {{ .schedule | quote }}
   successfulJobsHistoryLimit: 3
@@ -20,7 +24,9 @@ spec:
   jobTemplate:
     metadata:
       labels:
-{{ include "benji.labels" $ | indent 8 }}
+        app.kubernetes.io/name: {{ include "benji.name" $ }}
+        app.kubernetes.io/instance: {{ $.Release.Name }}
+        app.kubernetes.io/component: cronjob-{{ .name }}
     spec:
       backoffLimit: 0
       {{- if $.Values.benji.cronJob.activeDeadlineSeconds }}
@@ -29,15 +35,17 @@ spec:
       template:
         metadata:
           labels:
-{{ include "benji.labels" $ | indent 12 }}
+            app.kubernetes.io/name: {{ include "benji.name" $ }}
+            app.kubernetes.io/instance: {{ $.Release.Name }}
+            app.kubernetes.io/component: cronjob-{{ .name }}
         spec:
           serviceAccountName: {{ tuple $ "" | include "benji.fullname" }}
           dnsPolicy: ClusterFirstWithHostNet
           restartPolicy: Never
-{{- if $.Values.benji.initContainers }}
+      {{- if $.Values.benji.initContainers }}
           initContainers:
-{{ toYaml $.Values.benji.initContainers | indent 12 }}
-{{- end }}
+      {{ toYaml $.Values.benji.initContainers | indent 12 }}
+      {{- end }}
           containers:
             - name: benji
               image: "{{ $.Values.benji.image.registry }}/{{ $.Values.benji.image.repository }}:{{ $.Values.benji.image.tag }}"
@@ -60,10 +68,8 @@ spec:
                 - name: TZ
                   value: "{{ $.Values.timeZone }}"
               volumeMounts:
-                {{ if not $.Values.benji.externalConfiguration }}
                 - name: benji-config
                   mountPath: /benji/etc
-                {{ end }}
                 - name: tz-config
                   mountPath: /etc/localtime
                 {{ toYaml $.Values.benji.volumeMounts | nindent 16 }}
@@ -71,11 +77,15 @@ spec:
                 {{ toYaml $.Values.benji.resources | nindent 16 }}
           hostNetwork: false
           volumes:
-            {{ if not $.Values.benji.externalConfiguration }}
+    {{- if  $.Values.benji.externalSecretConfig }}
+            - name: benji-config
+              secret:
+                secretName: {{ $.Values.benji.externalSecretConfig }}
+    {{- else }}
             - name: benji-config
               configMap:
                 name: {{ tuple $ "" | include "benji.fullname" }}
-            {{ end }}
+    {{- end }}
             - name: tz-config
               hostPath:
                 path: /usr/share/zoneinfo/{{ $.Values.timeZone }}
