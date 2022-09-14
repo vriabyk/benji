@@ -1,14 +1,18 @@
-{{ if not .Values.benji.externalConfiguration }}
+{{ if not .Values.benji.externalSecretConfig }}
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: {{ tuple . "" | include "benji.fullname" }}
   labels:
-    {{ include "benji.labels" $ | indent 4 }}
+    app.kubernetes.io/name: {{ include "benji.name" . }}
+    helm.sh/chart: {{ include "benji.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
 data:
   benji.yaml: |
     {{ .Values.benji.configuration | toYaml | nindent 4 }}
+
 {{ end }}
 
 {{- if .Values.ceph.enabled }}
