@@ -61,17 +61,17 @@ benji:
     startingDeadlineSeconds: null
 
   crontab:
-    - name: backup-all
-      schedule: "*/10 * * * *"
-      command:
-        - benji-backup-pvc
-    - name: enforce
-      schedule: "00 04 * * *"
-      command:
-        - benji-command
-        - enforce
-        - latest3,hours24,days30,months3
-        - 'labels["benji-backup.me/instance"] == "benji-k8s"'
+    # - name: backup-all
+    #   schedule: "*/10 * * * *"
+    #   command:
+    #     - benji-backup-pvc
+    # - name: enforce
+    #   schedule: "00 04 * * *"
+    #   command:
+    #     - benji-command
+    #     - enforce
+    #     - latest3,hours24,days30,months3
+    #     - 'labels["benji-backup.me/instance"] == "benji-k8s"'
     # - name: cleanup
     #   schedule: "00 05 * * *"
     #   command:
