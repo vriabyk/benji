@@ -11,13 +11,13 @@ maintainers:
     email: email
   - name: JohnnyMastricht
     email: email
-# dependencies:
-#   - name: postgresql
-#     version: ~11.1.17
-#     repository: https://charts.bitnami.com/bitnami
-#     condition: postgresql.enabled
-#   - name: prometheus-pushgateway
-#     alias: pushgateway
-#     version: ~1.16.1
-#     repository: https://prometheus-community.github.io/helm-charts
-#     condition: pushgateway.enabled
+dependencies:
+  - name: postgresql
+    version: ~11.1.17
+    repository: https://charts.bitnami.com/bitnami
+    condition: postgresql.enabled
+  - name: prometheus-pushgateway
+    alias: pushgateway
+    version: ~1.16.1
+    repository: https://prometheus-community.github.io/helm-charts
+    condition: pushgateway.enabled

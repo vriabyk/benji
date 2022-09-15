@@ -60,7 +60,7 @@ benji:
     activeDeadlineSeconds: null
     startingDeadlineSeconds: null
 
-  crontab:
+  crontab: []
     # - name: backup-all
     #   schedule: "*/10 * * * *"
     #   command:
