@@ -6,11 +6,11 @@ maintainers:
   - name: Elemental
     email: lf@elemental.net
   - name: crabique
-    email: email
+    email: email@email.com
   - name: vriabyk
-    email: email
+    email: email@email.com
   - name: JohnnyMastricht
-    email: email
+    email: email@email.com
 dependencies:
   - name: postgresql
     version: ~11.1.17

@@ -79,15 +79,15 @@ spec:
                 {{- toYaml $.Values.benji.resources | nindent 16 }}
           hostNetwork: false
           volumes:
-    {{- if  $.Values.benji.externalSecretConfig }}
+            {{- if $.Values.benji.externalSecretConfig }}
             - name: benji-config
               secret:
                 secretName: {{ $.Values.benji.externalSecretConfig }}
-    {{- else }}
+            {{- else }}
             - name: benji-config
               configMap:
                 name: {{ tuple $ "" | include "benji.fullname" }}
-    {{- end }}
+            {{- end }}
             - name: tz-config
               hostPath:
                 path: /usr/share/zoneinfo/{{ $.Values.timeZone }}
