@@ -53,7 +53,7 @@ spec:
               securityContext:
                 privileged: true
               command:
-                {{ toYaml .command | nindent 16 }}
+                {{- toYaml .command | nindent 16 }}
               env:
                 - name: POD_NAME
                   valueFrom:
@@ -72,11 +72,11 @@ spec:
                   mountPath: /benji/etc
                 - name: tz-config
                   mountPath: /etc/localtime
-                {{- with $.Values.benji.volumeMounts }}
+                {{- if $.Values.benji.volumeMounts }}
                 {{- toYaml . | nindent 16 }}
                 {{- end }}
               resources:
-                {{ toYaml $.Values.benji.resources | nindent 16 }}
+                {{- toYaml $.Values.benji.resources | nindent 16 }}
           hostNetwork: false
           volumes:
     {{- if  $.Values.benji.externalSecretConfig }}
@@ -91,7 +91,7 @@ spec:
             - name: tz-config
               hostPath:
                 path: /usr/share/zoneinfo/{{ $.Values.timeZone }}
-            {{- with $.Values.benji.volumes }}
+            {{- if $.Values.benji.volumes }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
     {{- with $.Values.benji.nodeSelector }}
