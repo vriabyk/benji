@@ -33,11 +33,6 @@ spec:
       activeDeadlineSeconds: {{ $.Values.benji.cronJob.activeDeadlineSeconds }}
       {{- end }}
       template:
-       # metadata:
-       #   labels:
-       #     app.kubernetes.io/name: {{ include "benji.name" $ }}
-       #     app.kubernetes.io/instance: {{ $.Release.Name }}
-       #     app.kubernetes.io/component: cronjob-{{ .name }}
         spec:
           serviceAccountName: {{ tuple $ "" | include "benji.fullname" }}
           dnsPolicy: ClusterFirstWithHostNet
