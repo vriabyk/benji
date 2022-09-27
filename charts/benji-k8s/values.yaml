@@ -156,7 +156,7 @@ postgresql:
   #     size: 100Gi
 
 pushgateway:
-  enabled: true
+  enabled: false
   nameOverride: pushgateway
 
 ceph: {}
