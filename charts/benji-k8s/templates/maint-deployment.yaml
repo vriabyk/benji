@@ -27,10 +27,10 @@ spec:
     spec:
       serviceAccountName: {{ tuple . "" | include "benji.fullname" }}
       dnsPolicy: ClusterFirstWithHostNet
-  {{- if $.Values.benji.initContainers }}
+{{- if .Values.benji.initContainers }}
       initContainers:
-  {{ toYaml $.Values.benji.initContainers | indent 12 }}
-  {{- end }}
+{{ toYaml .Values.benji.initContainers | indent 8 }}
+{{- end }}
       containers:
         - name: benji
           image: "{{ .Values.benji.image.registry }}/{{ .Values.benji.image.repository }}:{{ .Values.benji.image.tag }}"
