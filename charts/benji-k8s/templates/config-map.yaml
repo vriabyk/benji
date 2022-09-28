@@ -20,7 +20,7 @@ data:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ tuple . "" | include "benji.fullname" }}
+  name: {{ .Values.ceph.configMapName }}
   labels:
     app.kubernetes.io/name: {{ include "benji.name" . }}
     helm.sh/chart: {{ include "benji.chart" . }}
