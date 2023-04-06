@@ -35,7 +35,7 @@ spec:
         - name: benji
           image: "{{ .Values.benji.image.registry }}/{{ .Values.benji.image.repository }}:{{ .Values.benji.image.tag }}"
           imagePullPolicy: {{ .Values.benji.image.pullPolicy }}
-          command: ["benji", "nbd", "-a", "0.0.0.0", "-r"]
+          command: ["benji", "--log-level", "DEBUG", "nbd", "-a", "0.0.0.0", "-r"]
           securityContext:
             privileged: true
           env:
